@@ -3,14 +3,12 @@
         "id": 1,
         "username": "can_saragih",
         "email": "canwhardana@gmail.com",
-        "password": "developer",
-        "bio": "Just a Hacktiv-8 student"
+        "password": "cansaragih30"
     },
     {
         "id": 2,
-        "username": "user",
+        "username": "feronicha_charly",
         "email": "user@gmail.com",
-        "password": "user",
-        "bio": "just an ordinary user"
+        "password": "feronicha17"
     }
 ]
