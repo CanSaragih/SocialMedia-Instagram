@@ -4,7 +4,6 @@
         "username": "can_saragih",
         "email": "canwhardana@gmail.com",
         "password": "developer",
-        "avatarUrl": "https://i.pravatar.cc/400?img=6",
         "bio": "Just a Hacktiv-8 student"
     },
     {
@@ -12,7 +11,6 @@
         "username": "user",
         "email": "user@gmail.com",
         "password": "user",
-        "avatarUrl": "https://i.pravatar.cc/400?img=68",
         "bio": "just an ordinary user"
     }
 ]
