@@ -3,12 +3,14 @@
         "id": 1,
         "username": "can_saragih",
         "email": "canwhardana@gmail.com",
-        "password": "cansaragih30"
+        "password": "cansaragih30",
+        "role": "admin"
     },
     {
         "id": 2,
         "username": "feronicha_charly",
         "email": "user@gmail.com",
-        "password": "feronicha17"
+        "password": "feronicha17",
+        "role": "admin"
     }
 ]

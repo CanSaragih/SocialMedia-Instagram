@@ -4,11 +4,6 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class UserProfile extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
     }
@@ -62,12 +57,14 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    location: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notNull: { msg: 'Location is required' },
-      notEmpty: { msg: 'Location is required' }
-    }
+    location: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Location is required' },
+        notEmpty: { msg: 'Location is required' }
+      }
+    },
   }, {
     sequelize,
     modelName: 'UserProfile',

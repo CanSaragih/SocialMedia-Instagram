@@ -2,13 +2,11 @@
 const {
   Model
 } = require('sequelize');
+const bcrypt = require('bcryptjs')
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
       // define association here
     }
@@ -30,7 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: 'Email is required' },
         notEmpty: { msg: 'Email is required' },
-        isEmail: 'Email must be a valid email format'
+        isEmail: {
+          msg: 'Email must be a valid email format'
+        }
       }
     },
     password: {
@@ -47,11 +47,24 @@ module.exports = (sequelize, DataTypes) => {
     },
     role: {
       type: DataTypes.STRING,
-      defaultValue: 'user'
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Username is required' },
+        notEmpty: { msg: 'Username is required' },
+        isIn: {
+          args: [['admin', 'user']],
+          msg: 'Role must be Admin or Users'
+        }
+      }
     }
   }, {
     sequelize,
     modelName: 'User',
   });
+  User.beforeCreate((user) => {
+    const salt = bcrypt.genSaltSync(10)
+    user.password = bcrypt.hashSync(user.password, salt)
+  })
+
   return User;
 };
