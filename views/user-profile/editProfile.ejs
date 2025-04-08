@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        textarea::-webkit-scrollbar-thumb {
+            background-color: rgba(100, 116, 139, 0.4);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl p-8 bg-white shadow-2xl rounded-2xl border border-gray-200 animate-fade-in">
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Edit Your Profile</h1>
+
+        <% if (error) { %>
+            <div class="mb-6 rounded-lg bg-red-100 p-4 text-red-800 shadow-md animate-fade-in">
+                <div class="text-sm font-medium flex items-start gap-2">
+                    <svg class="w-5 h-5 text-red-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.5a.75.75 0 10-1.5 0v3.5a.75.75 0 001.5 0v-3.5zM10 13a1 1 0 100 2 1 1 0 000-2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <ul class="space-y-1 list-disc pl-5">
+                        <% errors=error.split(','); %>
+                            <% errors.forEach(err=> { %>
+                                <li>
+                                    <%= err.trim() %>
+                                </li>
+                                <% }) %>
+                    </ul>
+                </div>
+            </div>
+            <% } %>
+
+                <form action="/userProfile/edit/<%= user.UserId %>" method="POST"
+                    class="grid gap-6 grid-cols-1 md:grid-cols-2" enctype="multipart/form-data">
+
+                    <div class="col-span-2">
+                        <label for="avatarUrl" class="block text-sm font-medium text-gray-700 mb-2">Profile
+                            Picture</label>
+                        <div class="flex items-center space-x-4">
+                            <input type="file" name="avatarUrl" accept="image/*"
+                                class="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors duration-200" />
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                        <textarea id="bio" name="bio" rows="4" placeholder="Tulis sesuatu tentang dirimu..."
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-400 transition-all duration-200 placeholder-gray-400 shadow-sm"><%= user.bio %></textarea>
+                    </div>
+
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                        <select id="gender" name="gender"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-400 transition-all duration-200 bg-white shadow-sm">
+                            <option value="">-- Pilih Gender --</option>
+                            <option value="Male" <%=user.gender==='Male' ? 'selected' : '' %>>Male</option>
+                            <option value="Female" <%=user.gender==='Female' ? 'selected' : '' %>>Female</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="age" class="block text-sm font-medium text-gray-700 mb-2">Age</label>
+                        <input type="number" name="age"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-400 transition-all duration-200 shadow-sm"
+                            value="<%= user.age %>" />
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <input type="text" id="location" name="location" placeholder="Contoh: Jakarta, Indonesia"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-400 transition-all duration-200 shadow-sm"
+                            value="<%= user.location %>" />
+                    </div>
+
+                    <div class="col-span-2 text-center">
+                        <button type="submit"
+                            class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow transition duration-200 ease-in-out transform hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
+    </div>
+</body>
+
+</html>

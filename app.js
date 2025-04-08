@@ -6,6 +6,7 @@ const port = 3000
 
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'));
 app.use(session({
     secret: 'socialmediaSecret123',
     resave: false,
@@ -15,7 +16,6 @@ app.use(session({
         sameSite: true
     }
 }))
-
 
 app.use(router)
 

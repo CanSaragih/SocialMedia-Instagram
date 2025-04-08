@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Post.belongsTo(models.User, { foreignKey: 'UserId' });
+      Post.belongsToMany(models.Tag, { through: models.PostTag });
     }
   }
   Post.init({
@@ -22,7 +23,15 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: { msg: 'Title is required' }
       }
     },
-    content: DataTypes.TEXT,
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notNull: { msg: 'Content is required' },
+        notEmpty: { msg: 'Content is required' }
+      }
+    },
+
     imgUrl: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -35,8 +44,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        notNull: { msg: 'ImgUrl is required' },
-        notEmpty: { msg: 'ImgUrl is required' }
+        notNull: { msg: 'UserId is required' },
+        notEmpty: { msg: 'UserId is required' }
       }
     }
   }, {

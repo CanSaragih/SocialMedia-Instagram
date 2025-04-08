@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= username %>'s Profile
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md border">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h1 class="text-2xl font-bold">Profile</h1>
+            <i class="fas fa-cog text-gray-500 hover:text-gray-700 cursor-pointer"></i>
+        </div>
+
+        <!-- Profile Info -->
+        <div class="flex flex-col md:flex-row md:items-start items-center md:space-x-10 space-y-6 md:space-y-0">
+            <!-- Avatar -->
+            <div>
+                <% if (profile && profile.avatarUrl) { %>
+                    <img src="<%= profile.avatarUrl %>" alt="Avatar"
+                        class="w-32 h-32 rounded-full object-cover ring-4 ring-blue-500 shadow-md">
+                    <% } else { %>
+                        <img src="https://via.placeholder.com/150" alt="Default Avatar"
+                            class="w-32 h-32 rounded-full object-cover ring-4 ring-gray-300 shadow-md">
+                        <% } %>
+            </div>
+
+            <!-- Info -->
+            <div class="flex-1 space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center md:space-x-6">
+                    <h2 class="text-xl font-semibold">
+                        <%= username %>
+                    </h2>
+                    <div class="flex space-x-6 text-sm text-gray-600 mt-2 md:mt-0">
+                        <div><span class="font-bold text-gray-800">
+                                <%= posts.length %>
+                            </span> posts</div>
+                        <div><span class="font-bold text-gray-800">0</span> followers</div>
+                        <div><span class="font-bold text-gray-800">0</span> following</div>
+                    </div>
+                </div>
+
+                <% if (profile) { %>
+                    <p><strong>Bio:</strong>
+                        <%= profile.bio %>
+                    </p>
+                    <p><strong>Gender:</strong>
+                        <%= profile.gender %>
+                    </p>
+                    <p><strong>Age:</strong>
+                        <%= profile.age %>
+                    </p>
+                    <p><strong>Location:</strong>
+                        <%= profile.location %>
+                    </p>
+                    <% } else { %>
+                        <p class="text-gray-500 italic">No profile information yet.</p>
+                        <% } %>
+
+                            <% if (profile) { %>
+                                <a href="/userProfile/edit/<%= user.id %>"
+                                    class="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition font-medium shadow">
+                                    Edit Profile
+                                </a>
+                                <% } else { %>
+                                    <a href="/userProfile/add"
+                                        class="inline-block bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition font-medium shadow">
+                                        Complete Profile
+                                    </a>
+                                    <% } %>
+            </div>
+        </div>
+
+        <!-- Post Section -->
+        <div class="mt-10 border-t pt-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Posts</h3>
+                <a href="/posts/add"
+                    class="bg-indigo-500 text-white px-4 py-1.5 rounded hover:bg-indigo-600 text-sm font-medium shadow-sm">
+                    + New Post
+                </a>
+            </div>
+
+            <% if (posts.length===0) { %>
+                <p class="text-gray-500 italic text-center">Belum ada postingan. Yuk tambah postingan pertama kamu!</p>
+                <% } else { %>
+                    <div class="grid grid-cols-3 gap-3">
+                        <% posts.forEach(post=> { %>
+                            <div class="relative group rounded overflow-hidden shadow-sm hover:shadow-md transition">
+                                <img src="<%= post.imgUrl %>" alt="Post Image"
+                                    class="w-full aspect-square object-cover">
+                                <div
+                                    class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
+                                    <p class="text-white text-sm font-semibold px-2">
+                                        <%= post.title %>
+                                    </p>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+
+</body>
+
+</html>

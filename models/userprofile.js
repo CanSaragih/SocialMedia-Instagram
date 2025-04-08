@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class UserProfile extends Model {
     static associate(models) {
-      // define association here
+      UserProfile.belongsTo(models.User, { foreignKey: 'UserId' });
     }
   }
   UserProfile.init({
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         notNull: { msg: 'Gender is required' },
         notEmpty: { msg: 'Gender is required' },
         isIn: {
-          args: [['Male', 'Famale']],
+          args: [['Male', 'Female']],
           msg: 'Gender must be Male or Female'
         }
       }
