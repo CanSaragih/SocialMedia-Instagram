@@ -19,4 +19,5 @@ router.post('/add', upload.single('avatarUrl'), UserProfileController.postAddPro
 router.get('/edit/:id', UserProfileController.getEditProfile);
 router.post('/edit/:id', upload.single('avatarUrl'), UserProfileController.postEditProfile);
 
+
 module.exports = router

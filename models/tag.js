@@ -16,12 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Tag.init({
     name: {
       type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-      validate: {
-        notNull: { msg: 'Tag name is required' },
-        notEmpty: { msg: 'Tag name is required' }
-      }
+      unique: { msg: 'tag name already in use' }
     }
   }, {
     sequelize,

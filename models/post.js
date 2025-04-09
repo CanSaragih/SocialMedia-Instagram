@@ -4,15 +4,23 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
       Post.belongsTo(models.User, { foreignKey: 'UserId' });
       Post.belongsToMany(models.Tag, { through: models.PostTag });
     }
+
+    static async getPostWithTagsAndUser(userId) {
+      return await this.findAll({
+        where: { UserId: userId },
+        include: [
+          this.sequelize.models.User,
+          this.sequelize.models.Tag
+        ],
+        order: [['createdAt', 'DESC']]
+      });
+    }
+
   }
   Post.init({
     title: {

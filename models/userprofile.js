@@ -4,9 +4,23 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class UserProfile extends Model {
+
     static associate(models) {
       UserProfile.belongsTo(models.User, { foreignKey: 'UserId' });
     }
+
+    get age() {
+      const birthDate = new Date(this.getDataValue('age'));
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
   }
   UserProfile.init({
     UserId: {
@@ -46,15 +60,33 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     age: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATE,
       allowNull: false,
       validate: {
-        notNull: { msg: 'Age is required' },
-        notEmpty: { msg: 'Age is required' },
-        min: {
-          args: [10],
-          msg: 'You must be at least 10 years old to join this circus'
+        notNull: { msg: 'Date of birth is required' },
+        notEmpty: { msg: 'Date of birth is required' },
+        isOldEnough(value) {
+          const birthDate = new Date(value);
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const m = today.getMonth() - birthDate.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+          }
+          if (age < 10) {
+            throw new Error('You must be at least 10 years old to join this circus');
+          }
         }
+      },
+      get() {
+        const birthDate = new Date(this.getDataValue('age'));
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age;
       }
     },
     location: {

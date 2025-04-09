@@ -7,21 +7,65 @@
         <%= username %>'s Profile
     </title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .post-thumbnail .overlay {
+            background-color: rgba(0, 0, 0, 0);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .post-thumbnail:hover .overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .post-thumbnail .overlay p {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .post-thumbnail:hover .overlay p {
+            opacity: 1;
+        }
+
+        #dropdownMenu {
+            opacity: 0;
+            transform: scaleY(0);
+        }
+
+        #dropdownMenu.show {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        .transition-all {
+            transition-property: opacity, transform;
+        }
+
+        #settingsIcon:hover {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 font-sans text-gray-800">
-
     <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md border">
-        <!-- Header -->
         <div class="flex justify-between items-center mb-6 border-b pb-4">
-            <h1 class="text-2xl font-bold">Profile</h1>
-            <i class="fas fa-cog text-gray-500 hover:text-gray-700 cursor-pointer"></i>
+            <h1 class="text-2xl font-bold text-gray-800">Profile</h1>
+            <div class="relative">
+                <i id="settingsIcon" class="fas fa-cog text-gray-500 hover:text-gray-700 cursor-pointer text-xl"></i>
+                <div id="dropdownMenu"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-10 transform origin-top-right transition-all duration-300 ease-out">
+                    <a href="/logout"
+                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r from-purple-500 to-pink-500 hover:text-white rounded-lg transition-all duration-200">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <!-- Profile Info -->
         <div class="flex flex-col md:flex-row md:items-start items-center md:space-x-10 space-y-6 md:space-y-0">
-            <!-- Avatar -->
             <div>
                 <% if (profile && profile.avatarUrl) { %>
                     <img src="<%= profile.avatarUrl %>" alt="Avatar"
@@ -32,7 +76,6 @@
                         <% } %>
             </div>
 
-            <!-- Info -->
             <div class="flex-1 space-y-4">
                 <div class="flex flex-col md:flex-row md:items-center md:space-x-6">
                     <h2 class="text-xl font-semibold">
@@ -78,7 +121,6 @@
             </div>
         </div>
 
-        <!-- Post Section -->
         <div class="mt-10 border-t pt-6">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold">Posts</h3>
@@ -88,27 +130,123 @@
                 </a>
             </div>
 
-            <% if (posts.length===0) { %>
-                <p class="text-gray-500 italic text-center">Belum ada postingan. Yuk tambah postingan pertama kamu!</p>
-                <% } else { %>
-                    <div class="grid grid-cols-3 gap-3">
-                        <% posts.forEach(post=> { %>
-                            <div class="relative group rounded overflow-hidden shadow-sm hover:shadow-md transition">
-                                <img src="<%= post.imgUrl %>" alt="Post Image"
-                                    class="w-full aspect-square object-cover">
-                                <div
-                                    class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
-                                    <p class="text-white text-sm font-semibold px-2">
-                                        <%= post.title %>
-                                    </p>
-                                </div>
-                            </div>
-                            <% }) %>
+            <% if (message) { %>
+                <div class="mb-6 rounded-lg bg-green-100 p-3 text-green-800 shadow-md animate-fade-in">
+                    <div class="text-sm font-medium flex items-start gap-2">
+                        <svg class="w-5 h-5 text-green-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.5a.75.75 0 10-1.5 0v3.5a.75.75 0 001.5 0v-3.5zM10 13a1 1 0 100 2 1 1 0 000-2z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p>
+                            <%= message %>
+                        </p>
                     </div>
-                    <% } %>
+                </div>
+                <% } %>
+
+
+                    <% if (posts.length===0) { %>
+                        <p class="text-gray-500 italic text-center">Belum ada postingan. Yuk tambah postingan pertama
+                            kamu!</p>
+                        <% } else { %>
+                            <div class="grid grid-cols-3 gap-3">
+                                <% posts.forEach(post=> { %>
+                                    <div class="relative post-thumbnail rounded overflow-hidden cursor-pointer"
+                                        data-bs-toggle="modal" data-bs-target="#postModal"
+                                        data-title="<%= formatTitle(post.title) %>" data-content="<%= post.content %>"
+                                        data-createdat="<%= formatDate(post.createdAt) %>"
+                                        data-imageurl="<%= post.imgUrl %>"
+                                        data-author="<%= post.User?.username || username %>"
+                                        data-postid="<%= post.id %>"
+                                        data-tags="<%= post.Tags.map(tag => tag.name).join(', ') %>">
+
+                                        <img src="<%= post.imgUrl %>" alt="Post Image"
+                                            class="w-full aspect-square object-cover transition-transform duration-300" />
+
+                                        <div class="overlay absolute inset-0 flex items-center justify-center">
+                                            <p class="text-white font-semibold text-sm">
+                                                <%= formatTitle(post.title) %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                            </div>
+                            <% } %>
         </div>
     </div>
 
+    <div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body d-flex">
+                    <img id="modalImage" class="img-fluid w-50 rounded" />
+                    <div class="ps-4 w-100">
+                        <h5 id="modalTitle" class="fw-bold"></h5>
+                        <p id="modalContent"></p>
+                        <small id="modalCreatedAt" class="text-muted d-block"></small>
+                        <small id="modalAuthor" class="text-muted d-block mb-3"></small>
+                        <div id="modalTags" class="mt-2 flex flex-wrap gap-2"></div>
+
+                        <form id="deleteForm" method="POST" onsubmit="return confirm('Yakin mau hapus postingan ini?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger mt-3">Delete Post</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const settingsIcon = document.getElementById("settingsIcon");
+            const dropdownMenu = document.getElementById("dropdownMenu");
+
+            settingsIcon.addEventListener("click", () => {
+                dropdownMenu.classList.toggle("show");
+                dropdownMenu.classList.toggle("hidden");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!settingsIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.add("hidden");
+                    dropdownMenu.classList.remove("show");
+                }
+            });
+        });
+
+
+        const thumbnails = document.querySelectorAll('.post-thumbnail');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const modalCreatedAt = document.getElementById('modalCreatedAt');
+        const modalAuthor = document.getElementById('modalAuthor');
+        const modalTags = document.getElementById('modalTags');
+        const deleteForm = document.getElementById('deleteForm');
+
+        thumbnails.forEach(img => {
+            img.addEventListener('click', () => {
+                modalImage.src = img.dataset.imageurl;
+                modalTitle.textContent = img.dataset.title;
+                modalContent.textContent = img.dataset.content;
+                modalCreatedAt.textContent = "Posted at: " + img.dataset.createdat;
+                modalAuthor.textContent = "By: " + img.dataset.author;
+                deleteForm.action = `/posts/${img.dataset.postid}/delete`;
+
+                const tags = img.dataset.tags.split(',').map(tag => tag.trim());
+                modalTags.innerHTML = '';
+                tags.forEach(tag => {
+                    const badge = document.createElement('span');
+                    badge.className = 'inline-block bg-primary text-white text-xs font-semibold me-1 px-2 py-1 rounded';
+                    badge.textContent = tag;
+                    modalTags.appendChild(badge);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

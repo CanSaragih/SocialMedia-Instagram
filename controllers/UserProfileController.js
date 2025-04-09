@@ -1,31 +1,41 @@
 const authMiddleware = require('../middleware/authMiddleware')
-const { User, UserProfile, Post } = require('../models')
+const { User, UserProfile, Post, Tag } = require('../models')
+const { formatDate, formatTitle } = require('../helpers/format')
 
 
 class UserProfileController {
 
     static async userProfile(req, res) {
         try {
-            const userId = req.session.userId;
+            const { message } = req.query
+            const userId = req.session.userId
 
             const user = await User.findByPk(userId, {
-                include: [UserProfile, Post]
-            });
+                include: [UserProfile]
+            })
 
             if (!user) {
-                return res.redirect('/login?error=User not found');
+                return res.redirect('/login?error=User not found')
             }
 
+            const posts = await Post.getPostWithTagsAndUser(userId)
+
             res.render('user-profile/userProfile', {
+                message,
                 user,
                 profile: user.UserProfile,
                 username: user.username,
-                posts: user.Posts
-            });
+                posts,
+                formatDate,
+                formatTitle
+
+            })
+
         } catch (error) {
             res.send(error.message)
         }
     }
+
 
     static async getAddProfile(req, res) {
         try {

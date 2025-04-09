@@ -1,14 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Instagram Clone - Landing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles untuk animasi dan efek */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide {
+            animation: slideIn 1s ease-out;
+        }
+
+        .bg-gradient-instagram {
+            background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
 </head>
 
-<body>
-    <h1>LANDING PAGE</h1>
+<body class="bg-gray-100 font-sans">
+
+
+    <header class="bg-white shadow-md fixed w-full z-10">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">InstaLook</div>
+            <ul class="flex space-x-6">
+                <li><a href="#home" class="text-gray-600 hover:text-gray-900">Beranda</a></li>
+                <li><a href="#contact" class="text-gray-600 hover:text-gray-900">Kontak</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <section id="home"
+        class="min-h-screen flex items-center justify-center bg-gradient-instagram text-white relative overflow-hidden">
+        <div class="container mx-auto px-6 text-center z-10">
+            <h1 class="text-5xl font-bold mb-4 animate-slide">Selamat Datang di InstaLook</h1>
+            <p class="text-xl mb-8 animate-slide delay-100">Bagikan Momen, Terhubung dengan Dunia – Seperti Instagram,
+                Tapi mirip doang 😃</p>
+            <a href="/login"
+                class="bg-white text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition animate-slide delay-200">Coba
+                Sekarang</a>
+        </div>
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <img src="https://source.unsplash.com/random/1200x800/?socialmedia" alt="Social Media Feed"
+            class="absolute inset-0 w-full h-full object-cover opacity-40">
+    </section>
+
+
+    <footer id="contact" class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">InstaLook</h3>
+                    <p class="text-gray-400">Media sosial terbaik untuk berbagi momen spesial Anda.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Link</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Tentang Kami</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Bantuan</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Hubungi Kami</h3>
+                    <p class="text-gray-400">Email: support@instalook.com</p>
+                    <p class="text-gray-400">Telepon: +62 123 456 789</p>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-400">
+                <p>&copy; 2025 InstaLook. All rights guysss.</p>
+            </div>
+        </div>
+    </footer>
+
 </body>
 
 </html>

@@ -36,7 +36,7 @@
 
 <body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-3xl mx-auto p-8 bg-white shadow-2xl rounded-2xl border border-gray-200 animate-fade-in">
-        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Create a New Post</h1>
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Create New Post</h1>
 
         <% if (error) { %>
             <div class="mb-6 rounded-lg bg-red-100 p-4 text-red-800 shadow-md animate-fade-in">
@@ -76,6 +76,12 @@
                         <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Content</label>
                         <textarea id="content" name="content" rows="4" placeholder="Apa yang kamu pikirkan?"
                             class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-400 transition-all duration-200 placeholder-gray-400 shadow-sm"></textarea>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">Hastag</label>
+                        <input type="text" id="tags" name="tags" placeholder="ex: #funny, #Glow"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-400 transition-all duration-200 shadow-sm" />
                     </div>
 
                     <div class="col-span-2 text-center">
