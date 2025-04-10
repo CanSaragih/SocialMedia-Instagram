@@ -1,19 +1,32 @@
 'use strict';
-const fs = require('fs').promises
+const bcrypt = require('bcryptjs')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    let user = JSON.parse(await fs.readFile('./data/users.json', 'utf8')).map(el => {
-      delete el.id
-      el.createdAt = new Date()
-      el.updatedAt = new Date()
-      return el
-    })
-    await queryInterface.bulkInsert('Users', user, {})
+    await queryInterface.bulkInsert('Users', [
+      {
+        username: 'admin1',
+        email: 'admin1@gmail.com',
+        password: bcrypt.hashSync('admin123', 10),
+        role: 'admin',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        username: 'admin2',
+        email: 'admin2@gmail.com',
+        password: bcrypt.hashSync('admin123', 10),
+        role: 'admin',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ], {})
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Users', null, {})
+    await queryInterface.bulkDelete('Users', {
+      username: ['admin1', 'admin2']
+    }, {})
   }
 };

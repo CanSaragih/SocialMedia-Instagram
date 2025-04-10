@@ -15,8 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     username: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
+      unique: {
+        msg: 'Username already in use.'
+      },
       validate: {
         notNull: { msg: 'Username is required' },
         notEmpty: { msg: 'Username is required' }
@@ -24,8 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
+      unique: {
+        msg: 'Email already in use.'
+      },
       validate: {
         notNull: { msg: 'Email is required' },
         notEmpty: { msg: 'Email is required' },
@@ -49,14 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        notNull: { msg: 'Username is required' },
-        notEmpty: { msg: 'Username is required' },
-        isIn: {
-          args: [['admin', 'user']],
-          msg: 'Role must be Admin or Users'
-        }
-      }
+      defaultValue: 'user'
     }
   }, {
     sequelize,

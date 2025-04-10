@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Result</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Animasi untuk kartu */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Efek hover pada kartu */
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styling tombol Back */
+        .back-button {
+            background: #2b6cb0;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #2c5282;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen font-sans">
+    <div class="container mx-auto py-10 px-4">
+        <!-- Header dengan Tombol Back -->
+        <div
+            class="bg-white rounded-lg shadow-md p-6 mb-8 flex items-center justify-between border-l-4 border-blue-600">
+            <div class="flex items-center space-x-4">
+                <a href="/userProfile" class="back-button transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </a>
+                <div>
+                    <i class="fas fa-search text-blue-600 text-2xl"></i>
+                    <h1 class="text-2xl font-bold text-gray-800 inline ml-2">Search Results for "<%= username %>"</h1>
+                </div>
+            </div>
+        </div>
+
+        <% if (users.length===0) { %>
+            <div class="bg-white rounded-lg shadow-md p-6 text-center text-gray-600">
+                <p>No users found.</p>
+            </div>
+            <% } else { %>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <% users.forEach((user, index)=> { %>
+                        <a href="/userProfile/public/<%= user.id %>"
+                            class="user-card bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition-all duration-300 card-animation delay-<%= index * 100 %>ms flex items-center space-x-4">
+                            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200">
+                                <% if (user.UserProfile && user.UserProfile.avatarUrl) { %>
+                                    <img src="<%= user.UserProfile.avatarUrl %>" alt="avatar"
+                                        class="w-full h-full object-cover">
+                                    <% } else { %>
+                                        <img src="https://via.placeholder.com/150" alt="default avatar"
+                                            class="w-full h-full object-cover">
+                                        <% } %>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-lg font-semibold text-gray-800 truncate">
+                                    <%= user.username %>
+                                </p>
+                                <% if (user.UserProfile && user.UserProfile.location) { %>
+                                    <p class="text-sm text-gray-500 truncate">
+                                        <%= user.UserProfile.location %>
+                                    </p>
+                                    <% } else { %>
+                                        <p class="text-sm text-gray-400">No location</p>
+                                        <% } %>
+                            </div>
+                        </a>
+                        <% }) %>
+                </div>
+                <% } %>
+    </div>
+</body>
+
+</html>

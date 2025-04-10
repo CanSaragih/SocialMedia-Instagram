@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+
+        .bg-gradient-custom {
+            background: linear-gradient(45deg, #2b6cb0, #4a5568);
+            background-size: 200% 200%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+
+
+        .logout-button {
+            background: #ef4444;
+
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-inter">
+    <div class="container mx-auto px-4 py-8">
+        <div
+            class="bg-white rounded-lg shadow-md p-6 mb-8 flex items-center justify-between border-l-4 border-gradient-custom fade-in">
+            <h1 class="text-3xl font-bold text-gray-800 flex items-center space-x-3">
+                <span>Admin Dashboard</span>
+            </h1>
+            <div class="flex items-center space-x-4">
+                <h2 class="text-xl font-semibold text-gray-600">Welcome, "<%= username %>"</h2>
+                <a href="/logout" class="logout-button transition-all">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover fade-in delay-100 transition-all"
+                style="background: linear-gradient(135deg, #2b6cb0, #3b82f6);">
+                <h2 class="text-xl font-semibold text-white">Total Users</h2>
+                <p class="text-4xl font-bold text-white mt-2">
+                    <%= users.length %>
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md card-hover fade-in delay-200 transition-all"
+                style="background: linear-gradient(135deg, #10b981, #34d399);">
+                <h2 class="text-xl font-semibold text-white">Total Posts</h2>
+                <p class="text-4xl font-bold text-white mt-2">
+                    <%= posts.length %>
+                </p>
+            </div>
+        </div>
+
+        <div class="mb-8 fade-in delay-300">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4 flex items-center space-x-2">
+                <i class="fas fa-users"></i>
+                <span>Pengguna Terkini</span>
+            </h3>
+            <div class="overflow-x-auto rounded-xl shadow-lg bg-white">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-200 text-gray-700">
+                        <tr>
+                            <th class="p-4 font-semibold">Username</th>
+                            <th class="p-4 font-semibold">Email</th>
+                            <th class="p-4 font-semibold">Role</th>
+                            <th class="p-4 font-semibold">Joined At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user=> { %>
+                            <tr class="border-b hover:bg-gray-50 transition-all">
+                                <td class="p-4 font-medium text-gray-800">
+                                    <%= user.username %>
+                                </td>
+                                <td class="p-4 text-gray-600">
+                                    <%= user.email %>
+                                </td>
+                                <td class="p-4 text-gray-600">
+                                    <%= user.role %>
+                                </td>
+                                <td class="p-4 text-sm text-gray-500">
+                                    <%= formatDate(user.createdAt) %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="fade-in delay-400">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4 flex items-center space-x-2">
+                <i class="fas fa-newspaper"></i>
+                <span>Postingan Terbaru</span>
+            </h3>
+            <div class="overflow-x-auto rounded-xl shadow-lg bg-white">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-200 text-gray-700">
+                        <tr>
+                            <th class="p-4 font-semibold">Title</th>
+                            <th class="p-4 font-semibold">Author</th>
+                            <th class="p-4 font-semibold">Tags</th>
+                            <th class="p-4 font-semibold">Posted At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% posts.forEach(post=> { %>
+                            <tr class="border-b hover:bg-gray-50 transition-all">
+                                <td class="p-4 font-medium text-gray-800">
+                                    <%= post.title %>
+                                </td>
+                                <td class="p-4 text-gray-600">
+                                    @<%= post.User.username %>
+                                </td>
+                                <td class="p-4 text-sm text-gray-600">
+                                    <%= post.Tags.map(tag=> tag.name).join(', ') %>
+                                </td>
+                                <td class="p-4 text-sm text-gray-500">
+                                    <%= formatDate(post.createdAt) %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 const { User } = require('../models')
 const bcrypt = require('bcryptjs')
+const { sendWelcomeEmail } = require('../helpers/nodeMailer')
 
 class UserController {
 
@@ -25,7 +26,11 @@ class UserController {
                     req.session.username = user.username
                     req.session.role = user.role
 
-                    return res.redirect('/userProfile')
+                    if (user.role === 'admin') {
+                        return res.redirect('/adminDashboard')
+                    } else {
+                        return res.redirect('/userProfile')
+                    }
                 } else {
                     const msgError = `Password is incorrect`
                     return res.redirect(`/login?error=${msgError}`)
@@ -41,7 +46,8 @@ class UserController {
 
     static async getRegister(req, res) {
         try {
-            res.render('login-page/register')
+            const { error } = req.query
+            res.render('login-page/register', { error })
         } catch (error) {
             res.send(error.message)
         }
@@ -49,11 +55,26 @@ class UserController {
 
     static async postRegister(req, res) {
         try {
-            const { username, email, password, role } = req.body
-            await User.create({ username, email, password, role })
+            const { username, email, password } = req.body
+            await User.create({
+                username,
+                email,
+                password,
+                role: 'user'
+            })
+
+            await sendWelcomeEmail(email, username);
             res.redirect('/login')
         } catch (error) {
-            res.send(error.message)
+            if (
+                error.name === 'SequelizeValidationError' ||
+                error.name === 'SequelizeUniqueConstraintError'
+            ) {
+                let msgErrror = error.errors.map(er => er.message)
+                res.redirect(`/login/register?error=${msgErrror}`)
+            } else {
+                res.send(error.message)
+            }
         }
     }
 

@@ -1,7 +1,5 @@
 function formatDate(date) {
-    return new Date(date).toLocaleDateString('id-ID', {
-        day: 'numeric', month: 'long', year: 'numeric'
-    });
+    return new Date(date).toISOString().split('T')[0];
 }
 
 function formatTitle(title) {

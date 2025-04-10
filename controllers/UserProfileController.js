@@ -1,6 +1,6 @@
-const authMiddleware = require('../middleware/authMiddleware')
 const { User, UserProfile, Post, Tag } = require('../models')
 const { formatDate, formatTitle } = require('../helpers/format')
+const { Op } = require('sequelize')
 
 
 class UserProfileController {
@@ -78,7 +78,7 @@ class UserProfileController {
             const { id } = req.params
             const { error } = req.query
             let user = await UserProfile.findOne({ where: { UserId: id } })
-            res.render('user-profile/editProfile', { user, error })
+            res.render('user-profile/editProfile', { user, error, formatDate })
         } catch (error) {
             res.send(error.message)
         }
@@ -110,6 +110,55 @@ class UserProfileController {
             } else {
                 res.send(error.message)
             }
+        }
+    }
+
+    static async searchUser(req, res) {
+        try {
+            const { username } = req.query
+
+            const users = await User.findAll({
+                where: {
+                    username: {
+                        [Op.iLike]: `%${username}%`
+                    },
+                    role: 'user'
+                },
+                include: [UserProfile]
+            })
+
+            res.render('user-profile/searchUser', { users, username })
+        } catch (error) {
+            res.send(error.message);
+        }
+    }
+
+    static async publicProfile(req, res) {
+        try {
+
+            const userId = req.params.id
+
+            const profile = await UserProfile.findOne({
+                where: { UserId: userId },
+                include: [User]
+            });
+
+            if (!profile) {
+                return res.send("User not found")
+            }
+
+            const posts = await Post.getPostWithTagsAndUser(userId);
+            console.log(posts.map(p => p.imageUrl))
+            res.render('user-profile/publicProfile', {
+                profile,
+                username: profile.User.username,
+                posts,
+                formatDate,
+                formatTitle
+            });
+
+        } catch (error) {
+            res.send(error.message)
         }
     }
 }

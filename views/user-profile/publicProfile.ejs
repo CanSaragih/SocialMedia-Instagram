@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= username %>'s Profile
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style></style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+
+
+    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md border">
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h1 class="text-2xl font-bold text-gray-800">Profile</h1>
+            <a href="/userProfile"
+                class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition shadow text-sm">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </a>
+        </div>
+
+        <div class="flex flex-col md:flex-row md:items-start items-center md:space-x-10 space-y-6 md:space-y-0">
+            <div>
+                <% if (profile && profile.avatarUrl) { %>
+                    <img src="<%= profile.avatarUrl %>" alt="Avatar"
+                        class="w-32 h-32 rounded-full object-cover ring-4 ring-blue-500 shadow-md">
+                    <% } else { %>
+                        <img src="https://via.placeholder.com/150" alt="Default Avatar"
+                            class="w-32 h-32 rounded-full object-cover ring-4 ring-gray-300 shadow-md">
+                        <% } %>
+            </div>
+
+            <div class="flex-1 space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center md:space-x-6">
+                    <h2 class="text-xl font-semibold">
+                        <%= username %>
+                    </h2>
+                    <div class="flex space-x-6 text-sm text-gray-600 mt-2 md:mt-0">
+                        <div><span class="font-bold text-gray-800">
+                                <%= posts.length %>
+                            </span> posts</div>
+                        <div><span class="font-bold text-gray-800">0</span> followers</div>
+                        <div><span class="font-bold text-gray-800">0</span> following</div>
+                    </div>
+                </div>
+
+                <% if (profile) { %>
+                    <p><strong>Bio:</strong>
+                        <%= profile.bio %>
+                    </p>
+                    <p><strong>Gender:</strong>
+                        <%= profile.gender %>
+                    </p>
+                    <p><strong>Age:</strong>
+                        <%= profile.calculatedAge %>
+                    </p>
+                    <p><strong>Location:</strong>
+                        <%= profile.location %>
+                    </p>
+                    <% } else { %>
+                        <p class="text-gray-500 italic">No profile information yet.</p>
+                        <% } %>
+            </div>
+        </div>
+
+
+        <div class="mt-10 border-t pt-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Posts</h3>
+            </div>
+
+            <% if (posts.length===0) { %>
+                <p class="text-gray-500 italic text-center">
+                    <%= username %> belum memposting apa pun.
+                </p>
+                <% } else { %>
+                    <div class="grid grid-cols-3 gap-3">
+                        <% posts.forEach(post=> { %>
+                            <div class="relative post-thumbnail rounded overflow-hidden cursor-pointer"
+                                data-bs-toggle="modal" data-bs-target="#postModal"
+                                data-title="<%= formatTitle(post.title) %>" data-content="<%= post.content %>"
+                                data-createdat="<%= formatDate(post.createdAt) %>" data-imageurl="<%= post.imgUrl %>"
+                                data-author="<%= post.User?.username || username %>" data-postid="<%= post.id %>"
+                                data-tags="<%= post.Tags.map(tag => tag.name).join(', ') %>">
+                                <img src="<%= post.imgUrl %>" alt="Post Image"
+                                    class="w-full aspect-square object-cover transition-transform duration-300 hover:scale-105" />
+                                <div
+                                    class="overlay absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                    <p class="text-white font-semibold text-sm">
+                                        <%= formatTitle(post.title) %>
+                                    </p>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+
+</body>
+
+</html>

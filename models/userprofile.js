@@ -6,22 +6,26 @@ module.exports = (sequelize, DataTypes) => {
   class UserProfile extends Model {
 
     static associate(models) {
-      UserProfile.belongsTo(models.User, { foreignKey: 'UserId' });
+      UserProfile.belongsTo(models.User, { foreignKey: 'UserId' })
     }
 
-    get age() {
-      const birthDate = new Date(this.getDataValue('age'));
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-
-      const m = today.getMonth() - birthDate.getMonth();
+    get calculatedAge() {
+      const birthDate = new Date(this.getDataValue('age'))
+      const today = new Date()
+      let age = today.getFullYear() - birthDate.getFullYear()
+      const m = today.getMonth() - birthDate.getMonth()
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+        age--
       }
-      return age;
+      return age
+    }
+
+    getFullLocation() {
+      return this.location ? `📍 ${this.location}` : '📍 Location not set';
     }
 
   }
+
   UserProfile.init({
     UserId: {
       type: DataTypes.INTEGER,
@@ -77,16 +81,6 @@ module.exports = (sequelize, DataTypes) => {
             throw new Error('You must be at least 10 years old to join this circus');
           }
         }
-      },
-      get() {
-        const birthDate = new Date(this.getDataValue('age'));
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
-        }
-        return age;
       }
     },
     location: {

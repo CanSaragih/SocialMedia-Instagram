@@ -1,4 +1,5 @@
-const { Post, Tag } = require('../models')
+const { Post, User, Tag } = require('../models')
+const { formatTitle, formatDate } = require('../helpers/format');
 
 class PostController {
 
@@ -66,6 +67,35 @@ class PostController {
             res.redirect(`/userProfile?message=${msgDelete}`)
         } catch (error) {
             res.send(error.message)
+        }
+    }
+
+    static async filterByTags(req, res) {
+        try {
+            const { tag } = req.params
+
+            const tags = await Tag.findOne({
+                where: { name: `#${tag}` },
+                include: {
+                    model: Post,
+                    include: [User, Tag]
+                }
+            });
+
+
+            if (!tags) {
+                return res.status(404).send("Tag not found")
+            }
+
+            res.render("post-page/filteredPosts", {
+                posts: tags.Posts,
+                tagName: tags.name,
+                formatDate,
+                formatTitle
+            })
+
+        } catch (error) {
+            res.status(500).send(error.message)
         }
     }
 
